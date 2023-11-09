@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{%load static  %}
+
+{%block body%}
+
+<nav class="navbar bg-light">
+    <div class="container-fluid">
+      <form action="{%url 'Database:search'%}" class="d-flex" role="search" method="get">
+        <input class="form-control me-2" type="search"name="query " placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+{%for message in messages%}
+
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+    <p>{{ message}}</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+{% endfor %}
+ 
+  <table class="table">
+        <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Image</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+        </thead>
+        {% for students in data %}
+        <tbody>
+            <tr>
+                <td>{{ students.id }}</td>
+                <td >{{ students.name }}</td>
+                <td>{{ students.email }}</td>
+                <td>{{ students.phone }}</td>
+                <td><img src="media/{{ students.image }}" alt=""{{ students.name }} width="100"></td>
+                <td>
+                    <a href="/edit/{{ students.id }}" class="btn btn-warning">Edit</a>
+                </td>
+                <td>
+                    <a href="/delete/{{ students.id }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+
+          {%if data.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo First</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="?page={{data.previous_page_number}}">Previous</a></li>
+          {% endif %}
+
+          <li class="page-item disabled"><a class="page-link" href="#">Page {{data.number}} of {{data.paginator.num_pages}}</a></li>
+
+          {% for i in nums %}
+          <li class="page-item"><a class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+          {% endfor %}
+
+          {% if data.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{data.next_page_number}}">Next</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="?page{{data.paginator.run_pages }}">Last &raquo</a></li> 
+          {% endif %}
+        </ul>
+      </nav> 
+    
+  <p>Card representation</p>
+     <div class="row">
+        {% for students in data %}
+    <div class="col-md-3">
+        <div class="card" style="width: 18rem;">
+  <img src="media/{{ students.image }}" alt=""{{ students.name }} width="100">
+  <div class="card-body">
+
+    <h5 class="card-title">{{ students.name }}</h5>
+      <p class="card-text">{{ students.id }}</p>
+    <p class="card-text">{{ students.phone }}</p>
+      <p class="card-text">{{ students.email }}</p>
+  </div>
+</div>
+    </div>
+        {% endfor %}
+    </div>  
+ 
+
+{%endblock%}
